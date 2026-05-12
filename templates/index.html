@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meu Organizador de Estudos</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Oculta a barra de rolagem mas mantém funcionando (ótimo para mobile) */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-2 text-brand-600">
+                    <i class="fa-solid fa-layer-group text-xl"></i>
+                    <span class="text-lg font-bold tracking-tight hidden sm:block">StudyFlow</span>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-semibold text-gray-700">Olá, {{ nome_usuario }}!</p>
+                        <p class="text-xs text-gray-500">Ciência da Computação</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg shadow-inner">
+                        {{ nome_usuario[0] | upper }}
+                    </div>
+                    <a href="/logout" class="ml-2 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors" title="Sair da Conta">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        
+        <div class="sm:hidden mb-2">
+            <h1 class="text-2xl font-bold text-gray-900">Olá, {{ nome_usuario }}! 👋</h1>
+            <p class="text-gray-500 text-sm mt-1">Aqui está o seu resumo de estudos.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <div class="lg:col-span-4 space-y-6">
+                
+                <div class="bg-gradient-to-br from-brand-500 to-brand-600 rounded-2xl shadow-md p-6 flex flex-col justify-center items-center text-white relative overflow-hidden transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-xl mb-3 z-10">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div class="text-center z-10">
+                        <p class="text-sm font-medium text-brand-100 mb-1">Tempo Total Estudado</p>
+                        <h3 class="text-5xl font-bold tracking-tight">{{ total_minutos }} <span class="text-lg font-normal text-brand-100">min</span></h3>
+                    </div>
+                    <div class="absolute -right-6 -bottom-6 opacity-10 text-8xl">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-gray-900">Novo Registro</h2>
+                    </div>
+
+                    <form action="/adicionar" method="POST" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Matéria / Assunto</label>
+                            <input type="text" name="materia" required placeholder="Ex: Banco de Dados" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-gray-50 focus:bg-white transition-colors text-sm">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Minutos</label>
+                                <input type="number" name="tempo" required min="1" placeholder="60" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-gray-50 focus:bg-white transition-colors text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                                <select name="categoria" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-gray-50 focus:bg-white transition-colors text-sm">
+                                    <option value="Teoria">Teoria</option>
+                                    <option value="Prática">Prática</option>
+                                    <option value="Revisão">Revisão</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full mt-2 bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl shadow-sm flex items-center justify-center gap-2 transition-colors">
+                            <i class="fa-solid fa-check"></i> Salvar Estudo
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 space-y-6">
+                
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col">
+                    <h3 class="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-brand-500"></i> Distribuição de Foco
+                    </h3>
+                    <div class="relative w-full h-[250px] flex justify-center">
+                        <canvas id="meuGrafico"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+                    
+                    <div class="p-5 md:p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <i class="fa-solid fa-list-ul text-brand-500"></i> Últimos Estudos
+                        </h2>
+                        
+                        <div class="relative w-full md:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" id="inputBusca" class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors" placeholder="Buscar matéria...">
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto no-scrollbar">
+                        <table class="w-full text-left text-sm whitespace-nowrap" id="tabelaHistorico">
+                            <thead class="bg-gray-50 text-gray-500 font-medium">
+                                <tr>
+                                    <th class="px-5 md:px-6 py-4">Matéria</th>
+                                    <th class="px-5 md:px-6 py-4">Categoria</th>
+                                    <th class="px-5 md:px-6 py-4">Duração</th>
+                                    <th class="px-5 md:px-6 py-4 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                {% for estudo in estudos %}
+                                <tr class="hover:bg-gray-50/80 transition-colors group">
+                                    <td class="px-5 md:px-6 py-4 font-semibold text-gray-800">
+                                        {{ estudo.materia }}
+                                    </td>
+                                    <td class="px-5 md:px-6 py-4">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold
+                                            {% if estudo.categoria == 'Teoria' %} bg-blue-50 text-blue-700 border border-blue-100
+                                            {% elif estudo.categoria == 'Prática' %} bg-green-50 text-green-700 border border-green-100
+                                            {% else %} bg-purple-50 text-purple-700 border border-purple-100 {% endif %}">
+                                            {{ estudo.categoria }}
+                                        </span>
+                                    </td>
+                                    <td class="px-5 md:px-6 py-4 font-medium text-gray-600">
+                                        <i class="fa-regular fa-clock text-gray-400 mr-1"></i> {{ estudo.tempo }} min
+                                    </td>
+                                    <td class="px-5 md:px-6 py-4 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="/editar/{{ estudo.id }}" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 transition-colors" title="Editar">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                            <a href="/deletar/{{ estudo.id }}" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Excluir" onclick="return confirm('Tem certeza que deseja apagar este registro?')">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="px-6 py-10 text-center text-gray-400">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <i class="fa-solid fa-folder-open text-4xl mb-3 opacity-20"></i>
+                                            <p>Nenhum estudo registrado. Comece a preencher seu diário!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+    <script>
+        // Ativando o plugin de labels no Chart.js
+        Chart.register(ChartDataLabels);
+
+        // === 1. Lógica do Gráfico Chart.js ===
+        const dadosDoPython = JSON.parse('{{ resumo_categorias | tojson | safe }}');
+        const categorias = Object.keys(dadosDoPython);
+        const tempos = Object.values(dadosDoPython);
+
+        const ctx = document.getElementById('meuGrafico').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: categorias,
+                datasets: [{
+                    data: tempos,
+                    // Cores premium combinando com o tema (Azul, Verde, Roxo)
+                    backgroundColor: ['#3b82f6', '#10b981', '#a855f7'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%', // Rosca moderna um pouco mais grossa para caber os números
+                plugins: {
+                    // Configuração das porcentagens dentro das fatias
+                    datalabels: {
+                        color: '#ffffff',
+                        font: {
+                            weight: 'bold',
+                            size: 14,
+                            family: "'Inter', sans-serif"
+                        },
+                        formatter: (value, context) => {
+                            let total = context.chart._metasets[context.datasetIndex].total;
+                            let porcentagem = ((value / total) * 100).toFixed(0) + '%';
+                            
+                            // Esconde a porcentagem se a fatia for menor que 5% para não bugar visualmente
+                            if ((value / total) * 100 < 5) return '';
+                            return porcentagem;
+                        }
+                    },
+                    legend: {
+                        position: window.innerWidth < 768 ? 'bottom' : 'right', // Legenda embaixo no celular, na direita no PC
+                        labels: { 
+                            padding: 20, 
+                            usePointStyle: true, 
+                            font: { family: "'Inter', sans-serif", size: 12 } 
+                        }
+                    },
+                    // Melhorando o balão ao passar o mouse para mostrar "Minutos (Porcentagem)"
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let total = context.chart._metasets[context.datasetIndex].total;
+                                let valor = context.parsed;
+                                let pct = ((valor / total) * 100).toFixed(1) + '%';
+                                return ` ${context.label}: ${valor} min (${pct})`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // === 2. Lógica da Busca em Tempo Real ===
+        document.getElementById('inputBusca').addEventListener('keyup', function() {
+            let termoDigitado = this.value.toLowerCase();
+            let linhasDaTabela = document.querySelectorAll('#tabelaHistorico tbody tr');
+
+            linhasDaTabela.forEach(function(linha) {
+                // Se a linha tiver colspan (mensagem de vazio), ignora
+                if(linha.querySelector('td').hasAttribute('colspan')) return;
+
+                let textoDaLinha = linha.textContent.toLowerCase();
+                if (textoDaLinha.includes(termoDigitado)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
