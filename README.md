@@ -53,7 +53,7 @@ Para testar o organizador na sua máquina, siga os passos abaixo:
 
 ## 👤 Autor
 
-**Arthur Vinícius Gomes Souza** *Estudante de Ciência da Computação (3º Período) - **UniNassau*** 📍 Arara - PB / Campina Grande - PB  
+**Arthur Vinícius** *Estudante de Ciência da Computação (3º Período) - **UNINASSAU*** 📍Campina Grande - PB  
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/thurr-vini)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/arthur-vinícius-169a92307)
