@@ -42,6 +42,8 @@ def conectar_banco():
     conexao.row_factory = sqlite3.Row # Permite acessar as colunas pelo nome (ex: linha['materia'])
     return conexao
 
+inicializar_banco()
+
 # ROTAS DE AUTENTICAÇÃO (LOGIN E CADASTRO)
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
@@ -221,5 +223,4 @@ def deletar(id):
     return redirect('/')
 
 if __name__ == '__main__':
-    inicializar_banco() # Cria o banco na primeira vez que rodar
     app.run(debug=True)
